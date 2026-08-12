@@ -1,4 +1,4 @@
-import { TicketPriority, TicketStatus, UserRole } from '@prisma/client'
+import { Prisma, TicketPriority, TicketStatus, UserRole } from '@prisma/client'
 import { prisma } from '../lib/prisma.js'
 import { AppError } from '../lib/errors.js'
 import type { AuthUser } from '../types.js'
@@ -12,14 +12,15 @@ export function slaFor(createdAt: Date, priority: TicketPriority) {
   return { deadline, state: remaining < 0 ? 'OVERDUE' : remaining < 3600000 ? 'NEAR' : 'ON_TIME' }
 }
 
-function ticketScope(user: AuthUser) {
+function ticketScope(user: AuthUser): Prisma.TicketWhereInput {
   if (user.role === UserRole.EMPLOYEE) return { requesterId: user.id }
-  if (user.role === UserRole.AGENT) return { departmentId: user.departmentId ?? '__none__' }
+  if (user.role === UserRole.AGENT) return { OR:[{ departmentId:user.departmentId ?? '__none__' },{ requesterId:user.id }] }
   return {}
 }
 
 export async function listTickets(user: AuthUser, filters: Record<string, string | undefined>) {
-  const where = { ...ticketScope(user), ...(filters.status ? { status: filters.status as TicketStatus } : {}), ...(filters.priority ? { priority: filters.priority as TicketPriority } : {}), ...(filters.search ? { OR:[{code:{contains:filters.search,mode:'insensitive' as const}},{title:{contains:filters.search,mode:'insensitive' as const}},{requester:{name:{contains:filters.search,mode:'insensitive' as const}}}] } : {}) }
+  const search: Prisma.TicketWhereInput = filters.search ? { OR:[{code:{contains:filters.search,mode:'insensitive'}},{title:{contains:filters.search,mode:'insensitive'}},{requester:{name:{contains:filters.search,mode:'insensitive'}}}] } : {}
+  const where: Prisma.TicketWhereInput = { AND:[ticketScope(user),search], ...(filters.status ? { status: filters.status as TicketStatus } : {}), ...(filters.priority ? { priority: filters.priority as TicketPriority } : {}) }
   const items = await prisma.ticket.findMany({ where, include, orderBy:{ updatedAt:'desc' }, take:100 })
   return items.map(ticket => ({ ...ticket, sla: slaFor(ticket.createdAt, ticket.priority) }))
 }
