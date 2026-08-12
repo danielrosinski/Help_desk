@@ -25,6 +25,20 @@ React, TypeScript, Vite, React Router, React Hook Form, Zod, Axios, Node.js, Exp
 
 [Acessar o Help Desk](https://help-desk-ochre-xi.vercel.app)
 
+## Acesso para demonstração
+
+A aplicação utiliza dados fictícios para demonstração.
+
+### Funcionário
+
+E-mail: `daniel@empresa.com`  
+Senha: `Senha@123`
+
+### Agente de suporte
+
+E-mail: `marcos@empresa.com`  
+Senha: `Senha@123`
+
 ## Autor
 
 Daniel Rosinski
