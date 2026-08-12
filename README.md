@@ -27,17 +27,24 @@ React, TypeScript, Vite, React Router, React Hook Form, Zod, Axios, Node.js, Exp
 
 ## Acesso para demonstração
 
-A aplicação utiliza dados fictícios para demonstração.
+As contas abaixo utilizam dados fictícios e estão disponíveis para avaliação das permissões do sistema.
 
 ### Funcionário
 
-E-mail: `daniel@empresa.com`  
+E-mail: `joao@empresa.com`  
 Senha: `Senha@123`
 
-### Agente de suporte
+### Agente financeiro
 
-E-mail: `marcos@empresa.com`  
+E-mail: `alessandra@empresa.com`  
 Senha: `Senha@123`
+
+### Agente de Tecnologia da Informação
+
+E-mail: `victor@empresa.com`  
+Senha: `Senha@123`
+
+O acesso administrativo não é disponibilizado publicamente.
 
 ## Autor
 
