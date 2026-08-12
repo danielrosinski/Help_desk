@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run prisma:generate -w server && npm run build -w client",
+  "buildCommand": "npm run prisma:generate -w server && npm run prisma:push -w server && npm run seed -w server && npm run build -w client",
   "outputDirectory": "client/dist",
   "functions": {
     "api/index.ts": {
