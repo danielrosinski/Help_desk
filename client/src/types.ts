@@ -1,0 +1,10 @@
+export type Role='EMPLOYEE'|'AGENT'|'ADMIN'
+export type Status='OPEN'|'IN_PROGRESS'|'WAITING_REQUESTER'|'RESOLVED'|'CLOSED'|'CANCELLED'
+export type Priority='LOW'|'MEDIUM'|'HIGH'|'URGENT'
+export interface Department{id:string;name:string;active:boolean;_count?:{users:number;categories:number}}
+export interface Category{id:string;name:string;active:boolean;departmentId:string;department?:Department}
+export interface User{id:string;name:string;email:string;role:Role;active:boolean;departmentId:string|null;department?:Department;createdAt:string}
+export interface Comment{id:string;message:string;internal:boolean;createdAt:string;author:{id:string;name:string;role:Role}}
+export interface History{id:string;action:string;oldValue?:string;newValue?:string;createdAt:string;user:{name:string}}
+export interface Ticket{id:string;code:string;title:string;description:string;resolution?:string;status:Status;priority:Priority;requesterId:string;requester:Pick<User,'id'|'name'|'email'>;assignedToId?:string;assignedTo?:Pick<User,'id'|'name'>;category:Category;department:Department;createdAt:string;updatedAt:string;resolvedAt?:string;comments?:Comment[];history?:History[];sla:{deadline:string;state:'ON_TIME'|'NEAR'|'OVERDUE'}}
+export interface Notification{id:string;type:string;message:string;ticketId?:string;read:boolean;createdAt:string}

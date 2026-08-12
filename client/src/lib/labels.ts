@@ -1,0 +1,6 @@
+import type { Priority,Role,Status } from '../types'
+export const statusLabels:Record<Status,string>={OPEN:'Aberto',IN_PROGRESS:'Em atendimento',WAITING_REQUESTER:'Aguardando solicitante',RESOLVED:'Resolvido',CLOSED:'Fechado',CANCELLED:'Cancelado'}
+export const priorityLabels:Record<Priority,string>={LOW:'Baixa',MEDIUM:'Média',HIGH:'Alta',URGENT:'Urgente'}
+export const roleLabels:Record<Role,string>={EMPLOYEE:'Funcionário',AGENT:'Agente',ADMIN:'Administrador'}
+export const dateTime=(value:string)=>new Intl.DateTimeFormat('pt-BR',{dateStyle:'short',timeStyle:'short'}).format(new Date(value))
+export const historyLabel=(item:{action:string;oldValue?:string;newValue?:string;user:{name:string}})=>({TICKET_CREATED:`Chamado criado por ${item.user.name}`,TICKET_ASSIGNED:`${item.user.name} assumiu o chamado`,TICKET_TRANSFERRED:`Atendimento transferido de ${item.oldValue ?? 'sem responsável'} para ${item.newValue}`,STATUS_CHANGED:`Status alterado de ${item.oldValue} para ${item.newValue}`,PRIORITY_CHANGED:`Prioridade alterada de ${item.oldValue} para ${item.newValue}`,TICKET_RESOLVED:`Chamado marcado como resolvido`,TICKET_REOPENED:`Chamado reaberto por ${item.user.name}`}[item.action] ?? `Chamado atualizado por ${item.user.name}`)
