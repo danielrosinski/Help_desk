@@ -21,6 +21,10 @@ A aplicação centraliza a abertura, o acompanhamento e a resolução de chamado
 
 React, TypeScript, Vite, React Router, React Hook Form, Zod, Axios, Node.js, Express, PostgreSQL, Prisma ORM, JWT e bcrypt.
 
+## Aplicação
+
+[Acessar o Help Desk](https://help-desk-ochre-xi.vercel.app)
+
 ## Autor
 
 Daniel Rosinski
