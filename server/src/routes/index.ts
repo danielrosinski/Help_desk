@@ -56,7 +56,19 @@ api.post('/users',authenticate,authorize(UserRole.ADMIN),wrap(async(req:any,res:
 }))
 api.patch('/users/:id',authenticate,authorize(UserRole.ADMIN),wrap(async(req:any,res:any)=>{
   const data=z.object({name:z.string().min(3).optional(),email:z.string().email().optional(),role:z.nativeEnum(UserRole).optional(),departmentId:z.string().nullable().optional(),active:z.boolean().optional()}).parse(req.body)
+  const current=await prisma.user.findUnique({where:{id:req.params.id}})
+  if(!current) throw new AppError(404,'Usuário não encontrado.')
+  if(current.role===UserRole.ADMIN && (data.active===false || (data.role && data.role!==UserRole.ADMIN))) throw new AppError(403,'O administrador não pode ser desativado nem ter o perfil alterado.')
+  if(data.email) data.email=data.email.toLowerCase()
   res.json(await prisma.user.update({where:{id:req.params.id},data,omit:{passwordHash:true}}))
+}))
+api.delete('/users/:id',authenticate,authorize(UserRole.ADMIN),wrap(async(req:any,res:any)=>{
+  const user=await prisma.user.findUnique({where:{id:req.params.id},include:{_count:{select:{requestedTickets:true,assignedTickets:true,comments:true,history:true}}}})
+  if(!user) throw new AppError(404,'Usuário não encontrado.')
+  if(user.role===UserRole.ADMIN) throw new AppError(403,'O administrador não pode ser excluído.')
+  if(Object.values(user._count).some(total=>total>0)) throw new AppError(409,'Este usuário possui histórico e não pode ser excluído. Desative o cadastro.')
+  await prisma.user.delete({where:{id:user.id}})
+  res.status(204).end()
 }))
 
 api.get('/notifications',authenticate,wrap(async(req:AuthRequest,res:any)=>res.json(await prisma.notification.findMany({where:{userId:req.user!.id},orderBy:{createdAt:'desc'},take:100}))))
